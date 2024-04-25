@@ -6,6 +6,7 @@
 #define LUA_VM_LUAVALUE_H
 
 #include <iostream>
+#include <memory>
 #include "consts.h"
 
 using namespace std;
@@ -16,12 +17,27 @@ class LuaValue {
 public:
     virtual LuaType type() const = 0;
     virtual string to_string() const = 0;
+    virtual pair<int, bool> to_int() const = 0;
+    virtual pair<double, bool> to_double() const {
+        return {0, false};
+    }
+    virtual bool to_bool() const = 0;
+
+    /* 比较方法 */
+    /* 相等 */
+    static bool eq(const shared_ptr<LuaValue>& a, const shared_ptr<LuaValue>& b);
+    /* 小于 */
+    static bool lt(const shared_ptr<LuaValue>& a, const shared_ptr<LuaValue>& b);
+    /* 小于等于 */
+    static bool le(const shared_ptr<LuaValue>& a, const shared_ptr<LuaValue>& b);
 };
 
 class LuaValueNil: public LuaValue {
 public:
     LuaType type() const override;
     string to_string() const override;
+    pair<int, bool> to_int() const override;
+    bool to_bool() const override;
 };
 
 class LuaValueInt: public LuaValue {
@@ -31,6 +47,9 @@ public:
     LuaValueInt(int val);
     LuaType type() const override;
     string to_string() const override;
+    pair<int, bool> to_int() const override;
+    pair<double, bool> to_double() const override;
+    bool to_bool() const override;
 };
 
 class LuaValueNumber: public LuaValue {
@@ -40,6 +59,9 @@ public:
     LuaValueNumber(double val);
     LuaType type() const override;
     string to_string() const override;
+    pair<int, bool> to_int() const override;
+    pair<double, bool> to_double() const override;
+    bool to_bool() const override;
 };
 
 class LuaValueBool: public LuaValue {
@@ -49,6 +71,8 @@ public:
     LuaValueBool(bool val);
     LuaType type() const override;
     string to_string() const override;
+    pair<int, bool> to_int() const override;
+    bool to_bool() const override;
 };
 
 class LuaValueString: public LuaValue {
@@ -58,6 +82,9 @@ public:
     LuaValueString(std::string val);
     LuaType type() const override;
     string to_string() const override;
+    pair<int, bool> to_int() const override;
+    pair<double, bool> to_double() const override;
+    bool to_bool() const override;
 };
 
 

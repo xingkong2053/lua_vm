@@ -11,5 +11,9 @@ add_executable(lua_vm main.cpp
         luaStack.h
         utils.cpp
         utils.h
-        LuaState.cpp
-        LuaState.h)
+        lua_state/LuaState.cpp
+        lua_state/LuaState.h
+        arithmetic/number.cpp
+        arithmetic/number.h
+        lua_state/Operator.cpp
+        lua_state/Operator.h)
