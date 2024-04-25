@@ -1,10 +1,17 @@
 #include "lua_state/LuaState.h"
+#include <fstream>
+#include "reader/Reader.h"
+#include "reader/print.h"
 
 using namespace std;
 
 int main() {
 
-    LuaState vm;
+    Reader r("C:\\Users\\Administrator\\Documents\\lua\\func.out");
+    auto p = r.unDump();
+    list(p);
+
+//    LuaState vm(20, "");
 //    vm.Debug();
 //    vm.PushBoolean(true);
 //    vm.Debug();
@@ -31,21 +38,21 @@ int main() {
 //    auto [i2, ok2] = n2.to_int();
 //    cout << ok << " " << ok2 << endl;
 
-    vm.PushInteger(1);
-    vm.PushString("2.0");
-    vm.PushString("3.0");
-    vm.PushNumber(4.0);
-    vm.Debug();
-    vm.Arith(ArithOp::LUA_OPADD);
-    vm.Debug();
-    vm.Arith(ArithOp::LUA_OPBNOT);
-    vm.Debug();
-    vm.Len(2);
-    vm.Debug();
-    vm.Concat(3);
-    vm.Debug();
-    vm.PushBoolean(vm.Compare(1,2, CompareOp::LUA_OPEQ));
-    vm.Debug();
+//    vm.PushInteger(1);
+//    vm.PushString("2.0");
+//    vm.PushString("3.0");
+//    vm.PushNumber(4.0);
+//    vm.Debug();
+//    vm.Arith(ArithOp::LUA_OPADD);
+//    vm.Debug();
+//    vm.Arith(ArithOp::LUA_OPBNOT);
+//    vm.Debug();
+//    vm.Len(2);
+//    vm.Debug();
+//    vm.Concat(3);
+//    vm.Debug();
+//    vm.PushBoolean(vm.Compare(1,2, CompareOp::LUA_OPEQ));
+//    vm.Debug();
 
     return 0;
 }

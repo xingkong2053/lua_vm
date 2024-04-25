@@ -3,11 +3,13 @@
 //
 
 #include "LuaState.h"
+
+#include <utility>
 #include "../utils.h"
 #include "Operator.h"
 
-LuaState::LuaState() {
-    stack = make_shared<luaStack>(20);
+LuaState::LuaState(int stackSize, string proto): proto(std::move(proto)), pc(0) {
+    stack = make_shared<luaStack>(stackSize);
 }
 
 int LuaState::GetTop() const {
@@ -231,6 +233,28 @@ bool LuaState::IsString(int idx) const {
     auto typ = stack->get(idx)->type();
     return typ == LuaType::LUA_TSTRING || typ == LuaType::LUA_TNUMBER;
 }
+
+int LuaState::PC() {
+    return pc;
+}
+
+void LuaState::GetRK(int rk) {
+
+}
+
+void LuaState::AddPC(int n) {
+    pc += n;
+}
+
+uint32_t LuaState::Fetch() {
+    return 0;
+}
+
+void LuaState::GetConst(int idx) {
+
+}
+
+
 
 shared_ptr<LuaValue> arith(shared_ptr<LuaValue> a, shared_ptr<LuaValue> b, Operator op){
     if(!op.doubleFunc) {

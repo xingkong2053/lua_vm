@@ -16,4 +16,11 @@ add_executable(lua_vm main.cpp
         arithmetic/number.cpp
         arithmetic/number.h
         lua_state/Operator.cpp
-        lua_state/Operator.h)
+        lua_state/Operator.h
+        binchunk/BinaryChunk.cpp
+        binchunk/BinaryChunk.h
+        binchunk/BinaryChunk.h
+        reader/Reader.cpp
+        reader/Reader.h
+        reader/print.cpp
+        reader/print.h)

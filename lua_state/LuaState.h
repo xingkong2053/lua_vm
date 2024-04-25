@@ -57,14 +57,29 @@ public:
     virtual ~ILuaState() {} // 声明虚析构函数，以便正确释放派生类对象
 };
 
+class ILuaVM: public ILuaState {
+    /* 返回当前pc(程序计数器) 测试用 */
+    virtual int PC() = 0;
+    /* 修改pc，实现跳转指令 */
+    virtual void AddPC(int n) = 0;
+    /* 取出当前指令，并指向下一条指令 */
+    virtual uint32_t Fetch() = 0;
+    /* 将指定常量推入栈顶 */
+    virtual void GetConst(int idx) = 0;
+    /* 将指定常量或栈值推入栈顶 */
+    virtual void GetRK(int rk) = 0;
+};
+
 /**
  * LuaState封装整个Lua解释器的状态
  */
-class LuaState: public ILuaState {
+class LuaState: public ILuaVM {
 private:
     std::shared_ptr<luaStack> stack;
+    string proto;
+    int pc;
 public:
-    LuaState();
+    explicit LuaState(int stackSize, string proto);
     int GetTop() const override;
     int AbsIndex(int idx) const override;
     /* 检查栈空间并扩容栈，永远返回true */
@@ -111,6 +126,17 @@ public:
     bool Compare(int idx1, int idx2, CompareOp op) override;
 
     void Debug();
+
+    /* ILuaVM */
+    int PC() override;
+
+    void GetRK(int rk) override;
+
+    void AddPC(int n) override;
+
+    uint32_t Fetch() override;
+
+    void GetConst(int idx) override;
 };
 
 shared_ptr<LuaValue> arith(shared_ptr<LuaValue> a, shared_ptr<LuaValue> b, Operator op);

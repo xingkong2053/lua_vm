@@ -42,7 +42,7 @@ public:
 
 class LuaValueInt: public LuaValue {
 private:
-    int item;
+    long item;
 public:
     LuaValueInt(int val);
     LuaType type() const override;
