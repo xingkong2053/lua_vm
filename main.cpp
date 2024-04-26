@@ -9,7 +9,7 @@ int main() {
 
     Reader r("C:\\Users\\Administrator\\Documents\\lua\\func.out");
     auto p = r.unDump();
-    list(p);
+    list(p, false);
 
 //    LuaState vm(20, "");
 //    vm.Debug();
