@@ -8,7 +8,7 @@
 #include "../utils.h"
 #include "Operator.h"
 
-LuaState::LuaState(int stackSize, string proto): proto(std::move(proto)), pc(0) {
+LuaState::LuaState(int stackSize, shared_ptr<Prototype> proto): proto(std::move(proto)), pc(0) {
     stack = make_shared<luaStack>(stackSize);
 }
 
@@ -154,6 +154,8 @@ std::string LuaState::TypeName(LuaType tp) const {
             return "user_data";
         case LuaType::LUA_TTHREAD:
             return "thread";
+        default:
+            return "unknown";
     }
 }
 
@@ -234,12 +236,30 @@ bool LuaState::IsString(int idx) const {
     return typ == LuaType::LUA_TSTRING || typ == LuaType::LUA_TNUMBER;
 }
 
+double LuaState::ToNumber(int idx) const {
+    auto val = stack->get(idx);
+    auto type = val->type();
+    if(type == LuaType::LUA_TNUMBER) {
+        auto [res, _ ] = val->to_double();
+        return res;
+    }
+    return 0;
+}
+
+bool LuaState::ToBoolean(int idx) const {
+    return stack->get(idx) -> to_bool();
+}
+
 int LuaState::PC() {
     return pc;
 }
 
 void LuaState::GetRK(int rk) {
-
+    if(rk > 0xff) {
+        GetConst(rk & 0xff);
+    } else {
+        PushValue(rk + 1 /* 指令数+1 栈索引 */);
+    }
 }
 
 void LuaState::AddPC(int n) {
@@ -247,14 +267,14 @@ void LuaState::AddPC(int n) {
 }
 
 uint32_t LuaState::Fetch() {
-    return 0;
+    auto instr = proto -> code[pc];
+    pc ++ ;
+    return instr;
 }
 
 void LuaState::GetConst(int idx) {
-
+    stack->push(proto -> constants[idx]);
 }
-
-
 
 shared_ptr<LuaValue> arith(shared_ptr<LuaValue> a, shared_ptr<LuaValue> b, Operator op){
     if(!op.doubleFunc) {

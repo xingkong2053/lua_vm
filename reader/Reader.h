@@ -69,7 +69,8 @@ private :
     int cursor;
     string filePath;
 public:
-    std::vector<char> data;
+    /* 注意类型是unsigned char或 bytes */
+    std::vector<unsigned char> data;
     streamsize size;
     Reader(const std::string& path);
     char readByte();

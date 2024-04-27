@@ -25,4 +25,7 @@ add_executable(lua_vm main.cpp
         reader/print.cpp
         reader/print.h
         opcode/Instruction.cpp
-        opcode/Instruction.h)
+        opcode/Instruction.h
+        opcode/instructions/misc.cpp
+        opcode/instructions/misc.h
+        opcode/opcode.h)

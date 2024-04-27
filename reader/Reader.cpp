@@ -17,9 +17,9 @@ Reader::Reader(const std::string& path): filePath(path) {
     auto fileSize = file.tellg();
     file.seekg(0, ios::beg);
 
-    data = vector<char>(fileSize);
+    data = vector<unsigned char>(fileSize);
     size = fileSize;
-    file.read(data.data(), fileSize);
+    file.read(reinterpret_cast<char *>(data.data()), fileSize);
 
     file.close();
 
@@ -41,10 +41,11 @@ unsigned int Reader::readUInt() {
         throw runtime_error("read out of range");
     }
     unsigned int result = 0, shift = 0;
-    for(auto i = cursor; i < cursor + 4; i++) {
-        result = result + (int)(data[i] << shift);
+    /*for(auto i = cursor; i < cursor + 4; i++) {
+        result = result + (unsigned int)(data[i] << shift);
         shift += 8;
-    }
+    }*/
+    result = (uint32_t)data[cursor] | ((uint32_t)data[cursor + 1] << 8) | ((uint32_t)data[cursor + 2] << 16) |((uint32_t)data[cursor + 3] << 24);
     cursor += 4;
     return result;
 }

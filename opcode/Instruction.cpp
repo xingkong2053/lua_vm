@@ -3,6 +3,7 @@
 //
 
 #include "Instruction.h"
+#include "opcode.h"
 
 /*
  31       22       13       5    0
@@ -29,8 +30,8 @@ int Instruction::getOpCode() const {
 
 std::tuple<int, int, int> Instruction::getABC() const {
     auto a = int(instr >> 6 & 0xFF);
-    auto b = int(instr >> 14 & 0x1FF);
-    auto c = int(instr >> 23 & 0x1FF);
+    auto c = int(instr >> 14 & 0x1FF);
+    auto b = int(instr >> 23 & 0x1FF);
     return {a, b, c};
 }
 

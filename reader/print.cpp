@@ -97,10 +97,10 @@ void printOperands(Instruction ins){
             auto [a, b, c] = ins.getABC();
             printf("%d\t", a);
             if(ins.getArgBMode() != OpArgN) {  // 在某些指令中b，c参数未使用
-                printf("%d\t", b > 0xff ? -1-b&0xff /* 最高位为1表示常量表索引，按负数输出 */: b);
+                printf("%d\t", b > 0xff ? -1-(b&0xff) /* 最高位为1表示常量表索引，按负数输出 */: b);
             }
             if(ins.getArgCMode() != OpArgN) {
-                printf("%d\t", c > 0xff ? -1-c&0xff: c);
+                printf("%d\t", c > 0xff ? -1-(c&0xff): c);
             }
             break;
         }

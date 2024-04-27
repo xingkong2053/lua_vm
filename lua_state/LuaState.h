@@ -9,6 +9,7 @@
 #include "Operator.h"
 #include <iostream>
 #include <memory>
+#include "../reader/Reader.h"
 
 class ILuaState {
 public:
@@ -34,10 +35,10 @@ public:
 //    virtual bool IsInteger(int idx) const = 0;
 //    virtual bool IsNumber(int idx) const = 0;
     virtual bool IsString(int idx) const = 0;
-//    virtual bool ToBoolean(int idx) const = 0;
+    virtual bool ToBoolean(int idx) const = 0;
 //    virtual int ToInteger(int idx) const = 0;
 //    virtual std::pair<int, bool> ToIntegerX(int idx) const = 0;
-//    virtual double ToNumber(int idx) const = 0;
+    virtual double ToNumber(int idx) const = 0;
 //    virtual std::pair<double, bool> ToNumberX(int idx) const = 0;
     virtual std::string ToString(int idx) const = 0;
     virtual std::pair<std::string, bool> ToStringX(int idx) const = 0;
@@ -76,10 +77,10 @@ class ILuaVM: public ILuaState {
 class LuaState: public ILuaVM {
 private:
     std::shared_ptr<luaStack> stack;
-    string proto;
+    shared_ptr<Prototype> proto;
     int pc;
 public:
-    explicit LuaState(int stackSize, string proto);
+    explicit LuaState(int stackSize, shared_ptr<Prototype> proto);
     int GetTop() const override;
     int AbsIndex(int idx) const override;
     /* 检查栈空间并扩容栈，永远返回true */
@@ -105,6 +106,8 @@ public:
     std::string TypeName(LuaType tp) const override;
     /* 是否为字符串类型或数字类型 */
     bool IsString(int idx) const override;
+    double ToNumber(int idx) const override;
+    bool ToBoolean(int idx) const override;
     pair<string, bool> ToStringX(int idx) const override;
     string ToString(int idx) const override;
 
@@ -129,13 +132,13 @@ public:
 
     /* ILuaVM */
     int PC() override;
-
+    /* rk大于256则将常量值推入栈顶，否则将寄存器值推入栈顶 */
     void GetRK(int rk) override;
 
     void AddPC(int n) override;
-
+    /* 根据pc从函数原型中取出指令并使pc++ */
     uint32_t Fetch() override;
-
+    /* 将常量推入栈顶 */
     void GetConst(int idx) override;
 };
 
